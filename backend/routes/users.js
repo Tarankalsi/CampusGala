@@ -10,12 +10,22 @@ const Otp = require('../models/Otp');
 require('dotenv').config();
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
-console.log(accountSid)
 const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = twilio(accountSid,authToken)
 const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
-console.log(twilioPhoneNumber)
 const JWT_SECRET = 'Taranisagoodboy'
+let sid = ''
 
+const service = async ()=> { 
+    try {
+        return await client.verify.v2.services.create({friendlyName : "first Verification Service"})
+    } catch (error) {
+        console.error(error.message)
+        res.status(500).send("Some Error Occurred");
+    }
+}
+
+console.log(service)
 //Route 1 : Create a User using :POST "/api/users/createuser"
 router.post('/createuser', [
     body('fullName', "Enter a Valid Name (minimum : 3 Characters").isLength({ min: 3 }),
@@ -64,7 +74,7 @@ router.post('/createuser', [
     }
 })
 
-//Route 2 : User  Login :POST "/api/users/createuser
+//Route 2 : User  Login :POST "/api/users/login
 
 router.post('/login', [
     body('mobileNumber', "Enter a Valid Email").isMobilePhone(),
@@ -118,23 +128,25 @@ router.post('/getuser', fetchuser, async (req, res) => {
 //Route 4 :  Request OTP for mobile number authentication: POST "/api/user/otp" .
 router.post('/otp', fetchuser ,async (req, res) => {
     try {
-
-        //Generate a random 6-digit OTP
-        const otp = Math.floor(100000 + Math.random() * 900000)
         
-        console.log(otp)
-        const otpData = await Otp.create({
-            mobileNumber: req.body.mobileNumber,
-            otp: otp
+       
+        const serviceObj = await service()
+        sid = serviceObj.sid
+      
+        const sms_send =await client.verify.v2.services(sid).verifications.create({
+            to: `+91${req.body.mobileNumber}`,
+            channel: 'sms'
         })
-        const client = twilio(accountSid , authToken)
+
+      
+    
 
         //send OTP using twilio
-        await client.messages.create({
-            body: `CampusGala Verification . OTP For verification is : ${otp}`,
-            from: twilioPhoneNumber,
-            to: req.body.mobileNumber
-        })
+        // await client.messages.create({
+        //     body: `CampusGala Verification . OTP For verification is : ${otp}`,
+        //     from: twilioPhoneNumber,
+        //     to: req.body.mobileNumber
+        // })
 
         res.status(200).send("OTP sent Succesffully")
     } catch (error) {
@@ -144,4 +156,17 @@ router.post('/otp', fetchuser ,async (req, res) => {
 })
 
 //Route 5 :  Request OTP for mobile number authentication: POST "/api/user/otp-verification" .
+router.post('/otp-verify' , fetchuser , async (req,res)=>{
+    try {
+        
+        const check_verify = await client.verify.v2.services(sid).verificationChecks.create({
+            to:`+91${req.body.mobileNumber}` , 
+            code: req.body.code
+        })
+        res.status(200).send(check_verify.status)
+    } catch (error) {
+        console.error('Error verify OTP:', error);
+        return res.status(500).json({ msg: 'Server error' });
+    }
+})
 module.exports = router

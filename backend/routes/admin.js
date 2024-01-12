@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router()
 const { body, validationResult } = require('express-validator');
-const Events = require('../models/Events')
+const multer = require('multer');
+const Events = require('../models/Events');
+
 
 //Route 1 : Add Event in Database :GET "/api/admin/addevent"
 router.post('/newevent' , [
@@ -22,9 +24,8 @@ router.post('/newevent' , [
             description ,
             termsAndCondition,
             ticketPrice,
-            totalTickets
+            totalTickets 
         })
-
         const savedEvent = await event.save()
         res.json(savedEvent)
     } catch (error) {

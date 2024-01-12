@@ -25,8 +25,11 @@ const EventSchema = new Schema({
   totalTickets:{
     type: Number,
     required: true
-  }
-
+  },
+  profileImage :{
+    data: Buffer,
+    contentType : String
+  },
   // Other event-related fields
 }, { timestamps: true });
 

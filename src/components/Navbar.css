@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@900&display=swap');
+nav{
+    background-color: rgba(0, 0, 0, 0.5);;
+    
+}
+nav h1  {
+    font-family: 'Raleway', sans-serif;
+}
+
+.nav-link {
+    font-family: 'Roboto', sans-serif; 
+    font-size: 1.4rem;
+    color: white; /* Set default color */
+    
+    
+}
+
+.nav-link:hover{
+    color: rgb(209, 23, 23,1);  
+    -webkit-text-stroke-: 0.2px white;
+}
+
+.nav-link-user{
+    text-decoration: none;
+    color: white;
+    background-color:rgb(209, 23, 23,1) ;
+    padding: 10px 20px 10px 20px;
+    font-family: 'Roboto', sans-serif; 
+    font-size: 1.4rem;
+    border-radius:8px ;
+}
+
+.user :hover{
+    color: black;
+}

@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;900&display=swap');
+.eventCard{
+    height: 46vh;
+    background-image: url('../images/main-qimg-5d79efb47a503e0942d349f724eb8e01-pjlq.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: 'Roboto', sans-serif; 
+}
+
+
+
+.event-link{
+    background-color: black;
+    text-decoration: none;
+}
+.event-link h3{
+    color: white;
+    font-family: 'Roboto', sans-serif; 
+    text-align: center;
+}
+
+.event-de small{
+    color: whitesmoke;
+}
